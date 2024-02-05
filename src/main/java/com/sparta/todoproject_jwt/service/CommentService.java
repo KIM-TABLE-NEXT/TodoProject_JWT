@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -47,5 +50,19 @@ public class CommentService {
             commentRepository.deleteById(id);
             return "삭제되었습니다.";
 
+    }
+
+    public List<CommentResponseDto> getCommentList(Long id, User user) {
+        Todo todo = todoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 id의 할일이 없습니다."));
+        if(todo.isPrivate()&&!todo.getUser().getUsername().equals(user.getUsername()))
+            throw new IllegalArgumentException("해당 할일의 댓글을 열람할 권한이 없습니다.");
+
+        List<Comment> commentList = commentRepository.findAllByTodo(todo);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+
+        for(Comment comment : commentList){
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }
+        return commentResponseDtoList;
     }
 }

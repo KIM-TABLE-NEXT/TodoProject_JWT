@@ -10,12 +10,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/comment")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
+
+    @GetMapping("/param")
+    @Operation(summary = "댓글 조회", description = "할일 id 값을 전달받아 댓글목록을 조회한다")
+    public List<CommentResponseDto> getCommentList(@RequestParam Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return commentService.getCommentList(id, userDetails.getUser());
+    }
 
     @PostMapping("/param")
     @Operation(summary = "댓글 작성", description = "할일 id 값을 전달받아 댓글을 작성한다")

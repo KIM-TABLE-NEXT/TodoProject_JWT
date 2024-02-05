@@ -15,8 +15,6 @@ public class TodoResponseDto {
     private String content;
     private String username;
     private LocalDateTime dateCreated;
-    private boolean isCompleted;
-    private boolean isPrivate;
 
     public TodoResponseDto(Todo todo) {
         this.id = todo.getId();
@@ -24,7 +22,5 @@ public class TodoResponseDto {
         this.content = todo.getContent();
         this.username = todo.getUser().getUsername();
         this.dateCreated = todo.getCreatedAt();
-        this.isCompleted = todo.isCompleted();
-        this.isPrivate = todo.isPrivate();
     }
 }

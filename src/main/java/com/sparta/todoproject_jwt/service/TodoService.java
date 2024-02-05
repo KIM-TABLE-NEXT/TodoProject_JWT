@@ -7,6 +7,7 @@ import com.sparta.todoproject_jwt.entity.User;
 import com.sparta.todoproject_jwt.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,13 @@ public class TodoService {
         return new TodoResponseDto(todo);
     }
 
-    public TodoResponseDto getTodoById(Long id) {
+    public TodoResponseDto getTodoById(Long id, User user) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
                 );
+        if(todo.isPrivate()&&!todo.getUser().getUsername().equals(user.getUsername()))
+            throw new IllegalArgumentException("해당 할일을 열람할 권한이 없습니다.");
+        else
         return new TodoResponseDto(todo);
     }
 
@@ -37,4 +41,63 @@ public class TodoService {
         }
         return todoResponseDtoList;
     }
+
+    public List<TodoResponseDto> getTodoListByTitle(String title, User user) {
+        List<Todo> todoList = todoRepository.findAllByUser(user);
+        List<TodoResponseDto> todoResponseDtoList = new ArrayList<>();
+
+        for(Todo todo : todoList){
+            if(todo.getTitle().equals(title)){
+                todoResponseDtoList.add(new TodoResponseDto(todo));
+            }
+        }
+        return todoResponseDtoList;
+
+
+    }
+
+    @Transactional
+    public TodoResponseDto updateTodoById(Long id, User user, TodoRequestDto requestDto) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
+        );
+        if(!todo.getUser().getUsername().equals(user.getUsername())){
+            throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
+        }
+        else{
+            todo.update(requestDto);
+            return new TodoResponseDto(todo);
+
+        }
+    }
+
+    @Transactional
+    public String updateTodoCompletion(Long id, User user) {
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
+        );
+        if(!todo.getUser().getUsername().equals(user.getUsername())){
+            throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
+        }
+        else{
+            todo.updateCompletion();
+            return  todo.isCompleted() + "로 변경되었습니다";
+        }
+    }
+
+    @Transactional
+    public String updateTodoDisclosure(Long id, User user){
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
+        );
+        if(!todo.getUser().getUsername().equals(user.getUsername())){
+            throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
+        }
+        else{
+            todo.updateDisclosure();
+            return  todo.isPrivate() + "로 변경되었습니다";
+        }
+    }
+
+
 }

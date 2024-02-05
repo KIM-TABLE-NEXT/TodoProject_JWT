@@ -26,8 +26,13 @@ public class TodoController {
     }
 
     @GetMapping("/param")
-    public TodoResponseDto getTodoById(@RequestParam Long id){
-        return todoService.getTodoById(id);
+    public TodoResponseDto getTodoById(@RequestParam Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.getTodoById(id, userDetails.getUser());
+    }
+
+    @GetMapping("/search/param")
+    public List<TodoResponseDto> getTodoByTitle(@RequestParam String title, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.getTodoListByTitle(title, userDetails.getUser());
     }
 
     @GetMapping("/all")
@@ -35,4 +40,18 @@ public class TodoController {
         return todoService.getTodoList(userDetails.getUser());
     }
 
+    @PutMapping("/param")
+    public TodoResponseDto updateTodoById(@RequestParam Long id, @RequestBody TodoRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.updateTodoById(id, userDetails.getUser(), requestDto);
+    }
+
+    @PutMapping("/completion/param")
+    public String updateTodoCompletion(@RequestParam Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.updateTodoCompletion(id, userDetails.getUser());
+    }
+
+    @PutMapping("/disclosure/param")
+    public String updateTodoDisclosure(@RequestParam Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.updateTodoDisclosure(id, userDetails.getUser());
+    }
 }

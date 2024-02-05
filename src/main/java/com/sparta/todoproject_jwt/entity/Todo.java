@@ -48,4 +48,23 @@ public class Todo extends Timestamped{
         this.user = user;
     }
 
+
+    public void update(TodoRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContents();
+    }
+
+    public void updateCompletion() {
+        if(this.isCompleted)
+            this.isCompleted = false;
+        else
+            this.isCompleted = true;
+    }
+
+    public void updateDisclosure() {
+        if(this.isPrivate)
+            this.isPrivate = false;
+        else
+            this.isPrivate = true;
+    }
 }

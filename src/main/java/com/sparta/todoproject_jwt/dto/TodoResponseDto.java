@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 public class TodoResponseDto {
 
-    private Long todoId;
+    private Long id;
     private String title;
     private String content;
     private String username;
@@ -19,7 +19,7 @@ public class TodoResponseDto {
     private boolean isPrivate;
 
     public TodoResponseDto(Todo todo) {
-        this.todoId = todo.getId();
+        this.id = todo.getId();
         this.title = todo.getTitle();
         this.content = todo.getContent();
         this.username = todo.getUser().getUsername();

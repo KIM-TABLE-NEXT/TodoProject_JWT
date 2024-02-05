@@ -6,11 +6,11 @@ import com.sparta.todoproject_jwt.security.UserDetailsImpl;
 import com.sparta.todoproject_jwt.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -23,6 +23,16 @@ public class TodoController {
     @PostMapping
     public TodoResponseDto createTodo(@RequestBody TodoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return todoService.createTodo(requestDto, userDetails.getUser());
+    }
+
+    @GetMapping("/param")
+    public TodoResponseDto getTodoById(@RequestParam Long id){
+        return todoService.getTodoById(id);
+    }
+
+    @GetMapping("/all")
+    public List<TodoResponseDto> getTodoList(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.getTodoList(userDetails.getUser());
     }
 
 }

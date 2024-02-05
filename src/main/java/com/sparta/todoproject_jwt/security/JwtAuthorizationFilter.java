@@ -1,5 +1,6 @@
 package com.sparta.todoproject_jwt.security;
 
+import com.sparta.todoproject_jwt.dto.ExceptionDto;
 import com.sparta.todoproject_jwt.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -7,6 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -37,6 +40,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
+                res.setContentType("application/json;charset=UTF-8");
+                res.setStatus(400);
+                JSONObject responseJson = new JSONObject();
+                responseJson.put("statusCode", "400");
+                responseJson.put("message", "토큰이 유효하지 않습니다.");
+                res.getWriter().print(responseJson);
                 return;
             }
 

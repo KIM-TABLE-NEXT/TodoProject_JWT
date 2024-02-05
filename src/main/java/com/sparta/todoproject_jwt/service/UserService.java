@@ -27,7 +27,7 @@ public class UserService {
 
         Optional<User> checkUsername = userRepository.findByUsername(username);
         if(checkUsername.isPresent()){
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
         User user = new User(username, password);
@@ -40,11 +40,11 @@ public class UserService {
         String password = requestDto.getPassword();
 
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
         );
 
         if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+            throw new IllegalArgumentException("회원을 찾을 수 없습니다.");
         }
 
        return jwtUtil.createToken(user.getUsername());

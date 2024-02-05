@@ -21,7 +21,7 @@ public class CommentService {
     public CommentResponseDto createCommentByTodoId(Long id, User user, CommentRequestDto requestDto) {
         Todo todo = todoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 id의 할일이 없습니다."));
         if(todo.isPrivate()&&!todo.getUser().getUsername().equals(user.getUsername()))
-            throw new IllegalArgumentException("댓글을 작성할 권한이 없습니다.");
+            throw new IllegalArgumentException("해당 할일에 댓글을 작성할 권한이 없습니다.");
 
         Comment comment = commentRepository.save(new Comment(user, todo, requestDto));
         return new CommentResponseDto(comment);
@@ -31,7 +31,7 @@ public class CommentService {
     public CommentResponseDto updateCommentById(Long id, User user, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 id의 댓글이 없습니다."));
         if(!comment.getUser().getUsername().equals(user.getUsername()))
-            throw new IllegalArgumentException("댓글을 수정할 권한이 없습니다.");
+            throw new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
 
            comment.update(requestDto);
            return new CommentResponseDto(comment);
@@ -41,7 +41,7 @@ public class CommentService {
     public String deleteCommentById(Long id, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 id의 댓글이 없습니다."));
         if(!comment.getUser().getUsername().equals(user.getUsername()))
-            throw new IllegalArgumentException("댓글을 삭제할 권한이 없습니다.");
+            throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
 
 
             commentRepository.deleteById(id);

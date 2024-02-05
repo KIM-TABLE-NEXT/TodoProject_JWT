@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,6 +40,7 @@ public class TodoService {
         for (Todo todo : todoList) {
             todoResponseDtoList.add(new TodoResponseDto(todo));
         }
+        Collections.sort(todoResponseDtoList, (o1, o2) -> o2.getDateCreated().compareTo(o1.getDateCreated()));
         return todoResponseDtoList;
     }
 
@@ -62,7 +64,7 @@ public class TodoService {
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
         );
         if(!todo.getUser().getUsername().equals(user.getUsername()))
-            throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
+            throw new IllegalArgumentException("할일 작성자만 수정할 수 있습니다.");
 
 
             todo.update(requestDto);
@@ -77,7 +79,7 @@ public class TodoService {
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
         );
         if(!todo.getUser().getUsername().equals(user.getUsername()))
-            throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
+            throw new IllegalArgumentException("할일 작성자만 수정할 수 있습니다.");
 
 
             todo.updateCompletion();
@@ -91,7 +93,7 @@ public class TodoService {
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
         );
         if(!todo.getUser().getUsername().equals(user.getUsername()))
-            throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
+            throw new IllegalArgumentException("할일 작성자만 수정할 수 있습니다.");
 
 
             todo.updateDisclosure();

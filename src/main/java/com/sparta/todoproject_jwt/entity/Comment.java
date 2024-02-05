@@ -1,5 +1,7 @@
 package com.sparta.todoproject_jwt.entity;
 
+import com.sparta.todoproject_jwt.dto.CommentRequestDto;
+import com.sparta.todoproject_jwt.dto.CommentResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +28,14 @@ public class Comment {
 
     @Column
     private String comment;
+
+    public Comment(User user, Todo todo, CommentRequestDto requestDto) {
+        this.user = user;
+        this.todo = todo;
+        this.comment = requestDto.getComment();
+    }
+
+    public void update(CommentRequestDto requestDto) {
+        this.comment = requestDto.getComment();
+    }
 }

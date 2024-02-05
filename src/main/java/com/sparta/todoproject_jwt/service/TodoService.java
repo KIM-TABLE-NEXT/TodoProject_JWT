@@ -28,7 +28,7 @@ public class TodoService {
                 );
         if(todo.isPrivate()&&!todo.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("해당 할일을 열람할 권한이 없습니다.");
-        else
+
         return new TodoResponseDto(todo);
     }
 
@@ -61,14 +61,14 @@ public class TodoService {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
         );
-        if(!todo.getUser().getUsername().equals(user.getUsername())){
+        if(!todo.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
-        }
-        else{
+
+
             todo.update(requestDto);
             return new TodoResponseDto(todo);
 
-        }
+
     }
 
     @Transactional
@@ -76,13 +76,13 @@ public class TodoService {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
         );
-        if(!todo.getUser().getUsername().equals(user.getUsername())){
+        if(!todo.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
-        }
-        else{
+
+
             todo.updateCompletion();
             return  todo.isCompleted() + "로 변경되었습니다";
-        }
+
     }
 
     @Transactional
@@ -90,13 +90,13 @@ public class TodoService {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 ()-> new IllegalArgumentException("해당 id의 할일이 존재하지 않습니다.")
         );
-        if(!todo.getUser().getUsername().equals(user.getUsername())){
+        if(!todo.getUser().getUsername().equals(user.getUsername()))
             throw new IllegalArgumentException("해당 할일을 수정할 권한이 없습니다.");
-        }
-        else{
+
+
             todo.updateDisclosure();
             return  todo.isPrivate() + "로 변경되었습니다";
-        }
+
     }
 
 

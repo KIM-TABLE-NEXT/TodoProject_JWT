@@ -41,9 +41,15 @@ public class TodoController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "할일 목록 조회", description = "할일 리스트를 조회한다.")
+    @Operation(summary = "할일 목록 모두 조회", description = "할일 리스트를 조회한다.")
     public List<TodoResponseDto> getTodoList(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return todoService.getTodoList(userDetails.getUser());
+    }
+
+    @GetMapping("/uncompleted")
+    @Operation(summary = "완료되지 않은 할일 목록 조회", description = "완료되지 않은 할일 리스트를 조회한다.")
+    public List<TodoResponseDto> getTodoListUncompleted(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return todoService.getTodoListUncompleted(userDetails.getUser());
     }
 
     @PutMapping("/param")

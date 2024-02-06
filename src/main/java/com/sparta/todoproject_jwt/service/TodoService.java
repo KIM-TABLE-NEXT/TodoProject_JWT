@@ -102,4 +102,15 @@ public class TodoService {
     }
 
 
+    public List<TodoResponseDto> getTodoListUncompleted(User user) {
+        List<Todo> todoList = todoRepository.findAllByUser(user);
+        List<TodoResponseDto> todoResponseDtoList = new ArrayList<>();
+
+        for (Todo todo : todoList) {
+            if(!todo.isCompleted())
+            todoResponseDtoList.add(new TodoResponseDto(todo));
+        }
+        Collections.sort(todoResponseDtoList, (o1, o2) -> o2.getDateCreated().compareTo(o1.getDateCreated()));
+        return todoResponseDtoList;
+    }
 }

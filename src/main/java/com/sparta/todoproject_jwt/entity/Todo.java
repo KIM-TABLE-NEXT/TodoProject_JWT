@@ -34,7 +34,10 @@ public class Todo extends Timestamped{
     @Column
     private boolean isCompleted;
 
-    @Column boolean isPrivate;
+    @Column
+    private boolean isPrivate;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
